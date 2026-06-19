@@ -1,0 +1,30 @@
+.stars {
+  inset: -70px;
+  z-index: 1;
+}
+
+.stars i {
+  background: #fff;
+  box-shadow: 0 0 7px rgba(255, 255, 255, .9);
+  will-change: transform, opacity;
+  animation-name: star-float;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.stars .star-depth-0 { opacity: .25; filter: blur(.2px); }
+.stars .star-depth-1 { opacity: .55; }
+.stars .star-depth-2 { box-shadow: 0 0 11px #fff, 0 0 18px rgba(152, 171, 255, .5); }
+.contact-grid { z-index: 2; }
+.admin-page + footer { display: none; }
+
+@keyframes star-float {
+  0% { opacity: .12; transform: translate3d(0, 60px, 0) scale(.65); }
+  30% { opacity: .95; }
+  65% { opacity: .35; }
+  100% { opacity: .12; transform: translate3d(var(--star-x), var(--star-y), 0) scale(1.18); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stars i { animation: none; opacity: .55; }
+}
