@@ -1,26 +1,44 @@
 [
   {
-    "postSlug": "el-arte-de-volver-a-ti",
+    "postSlug": "la-memoria-de-las-estrellas",
     "name": "Lucía M.",
-    "date": "14 Jun 2026",
-    "message": "Necesitaba leer esto hoy. A veces olvidamos que descansar también es avanzar."
+    "date": "20 Jun 2026",
+    "message": "Sentir el universo como nuestra casa también me hace pensar en cuánto debemos cuidar este planeta."
   },
   {
-    "postSlug": "el-arte-de-volver-a-ti",
+    "postSlug": "amar-es-un-verbo",
     "name": "Diego R.",
-    "date": "13 Jun 2026",
-    "message": "Me quedo con la idea de escuchar sin juzgar. Gracias por esta pausa."
+    "date": "19 Jun 2026",
+    "message": "Me quedo con la idea del amor como práctica diaria, no solo como emoción."
   },
   {
-    "postSlug": "conexiones-que-iluminan",
+    "postSlug": "el-arte-de-escuchar",
     "name": "Ana P.",
-    "date": "10 Jun 2026",
-    "message": "Una comunidad se construye justo así: con espacio para ser honestos."
+    "date": "17 Jun 2026",
+    "message": "Escuchar sin intentar arreglarlo todo cambia por completo una conversación."
   },
   {
-    "postSlug": "conexiones-que-iluminan",
-    "name": "Carlos luis",
-    "message": "aasdda",
-    "date": "19 jun. 2026"
+    "postSlug": "redes-que-sostienen",
+    "name": "María V.",
+    "date": "15 Jun 2026",
+    "message": "Quisiera sumar mi tiempo a la próxima acción comunitaria."
+  },
+  {
+    "postSlug": "luma-y-la-estrella-perdida",
+    "name": "Familia Soto",
+    "date": "09 Jun 2026",
+    "message": "Lo leímos juntos antes de dormir. La conversación sobre pedir ayuda fue muy bonita."
+  },
+  {
+    "postSlug": "reto-treinta-dias-de-luz",
+    "name": "Santiago C.",
+    "date": "06 Jun 2026",
+    "message": "Nuestro grupo juvenil se suma al reto. Empezamos este fin de semana."
+  },
+  {
+    "postSlug": "la-brujula-interior",
+    "name": "asddsa",
+    "message": "asdasd",
+    "date": "20 jun. 2026"
   }
 ]
