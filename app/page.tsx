@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, Compass, Eye, Heart, Orbit, Shield, Sparkles, Star, Users } from "lucide-react";
+import { ArrowDown, ArrowRight, BookOpen, Compass, Eye, Heart, Orbit, Shield, Sparkles, Star, Users } from "lucide-react";
 import constellationsData from "@/data/constellations.json";
 import type { Constellation } from "@/lib/types";
 import { Stars } from "@/components/Stars";
 import { MotionReveal } from "@/components/MotionReveal";
 import { ContactForm } from "@/components/ContactForm";
+import { getPosts } from "@/lib/posts";
 
 const constellations = constellationsData as Constellation[];
 const values = [
@@ -16,7 +17,8 @@ const values = [
   { title: "Libertad", icon: Compass, text: "Cultivamos autonomía, autenticidad y crecimiento interior sin imponer caminos." },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const posts = await getPosts();
   return <main>
     <section id="inicio" className="hero cosmic-hero">
       <Image src="/stardust-constellations.png" fill priority alt="Galaxia violeta atravesada por constelaciones luminosas" sizes="100vw" className="hero-bg" />
@@ -44,7 +46,7 @@ export default function Home() {
       <MotionReveal className="section-heading"><div><span className="kicker">NUESTRO UNIVERSO COMPARTIDO</span><h2>Explora las <em>constelaciones</em></h2></div><p>Cada constelación es un espacio vivo para aprender, compartir y transformar intención en comunidad.</p></MotionReveal>
       <div className="constellations-grid">{constellations.map((item, index) => <MotionReveal className={`constellation-card ${index === 0 ? "featured-constellation" : ""}`} delay={(index % 4) * .06} key={item.slug}>
         <div className="constellation-image"><Image src={item.image} fill sizes="(max-width: 800px) 100vw, 50vw" alt={`Imagen cósmica de ${item.title}`} /><div className="constellation-overlay" /></div>
-        <div className="constellation-body"><span className="constellation-index">CONSTELACIÓN {String(index + 1).padStart(2, "0")}</span><h3 id={item.slug}>{item.title}</h3><h4>{item.subtitle}</h4>{item.quote && <blockquote>“{item.quote}”</blockquote>}<p>{item.description}</p><Link href={`/constelaciones/${item.slug}`}>Entrar en esta constelación <ArrowRight size={15} /></Link></div>
+        <div className="constellation-body"><div className="constellation-meta"><span className="constellation-index">CONSTELACIÓN</span><span><BookOpen /> {posts.filter(post => post.constellation === item.slug).length} {posts.filter(post => post.constellation === item.slug).length === 1 ? "ARTÍCULO" : "ARTÍCULOS"}</span></div><h3 id={item.slug}>{item.title}</h3><h4>{item.subtitle}</h4>{item.quote && <blockquote>“{item.quote}”</blockquote>}<p>{item.description}</p><Link href={`/constelaciones/${item.slug}`}>Entrar en esta constelación <ArrowRight size={15} /></Link></div>
       </MotionReveal>)}</div>
     </div></section>
 

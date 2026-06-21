@@ -45,7 +45,7 @@ function clean(value: unknown, maxLength: number) {
 
 export async function GET(request: NextRequest) {
   const postSlug = clean(request.nextUrl.searchParams.get("postSlug"), 120);
-  if (!postSlug) return NextResponse.json({ error: "Falta la publicación." }, { status: 400 });
+  if (!postSlug) return NextResponse.json({ error: "Falta el espacio de conversación." }, { status: 400 });
 
   try {
     const [seed, stored] = await Promise.all([readSeedComments(), readStoredComments()]);

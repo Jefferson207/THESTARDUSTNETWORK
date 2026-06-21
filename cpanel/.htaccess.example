@@ -1,0 +1,2 @@
+SetEnv UPLOAD_API_TOKEN "usa-el-mismo-token-largo-de-CPANEL_UPLOAD_TOKEN"
+SetEnvIf Authorization "(.+)" HTTP_AUTHORIZATION=$1
