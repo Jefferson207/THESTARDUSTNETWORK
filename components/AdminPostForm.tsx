@@ -31,7 +31,7 @@ export function AdminPostForm() {
     const content = String(form.get("content") || "").split(/\n\s*\n/).map(item => item.trim()).filter(Boolean);
     const rawDate = String(form.get("date") || "");
     const date = rawDate ? new Intl.DateTimeFormat("es-PE", { day: "2-digit", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${rawDate}T00:00:00Z`)) : "";
-    const body = Object.fromEntries(form.entries()); body.date = date;
+    const body = Object.fromEntries(form.entries()); body.date = date; body.publishedAt = rawDate;
     setSending(true); setError(""); setCreatedSlug("");
     try {
       if (imageFile) {
@@ -66,7 +66,7 @@ export function AdminPostForm() {
       {error && <div className="admin-error">{error}</div>}
       <form className="admin-form" onSubmit={submit}>
         <section><h2>Información principal</h2><label>Constelación<select name="constellation" required defaultValue=""><option value="" disabled>Selecciona dónde publicar</option>{constellations.map(item => <option value={item.slug} key={item.slug}>{item.title}</option>)}</select><small>El artículo aparecerá automáticamente dentro de esta constelación.</small></label><label>Título<input name="title" required minLength={5} maxLength={140} placeholder="Título del artículo" /></label><div className="admin-row admin-row-two"><label>Fecha<input name="date" type="date" required /></label><label>Tiempo de lectura<input name="readTime" required maxLength={20} placeholder="6 min" /></label></div><label>Resumen<textarea name="summary" required minLength={10} maxLength={300} rows={3} placeholder="Una introducción breve para la tarjeta." /></label></section>
-        <section><h2>Contenido</h2><label>Texto del artículo<textarea name="content" required rows={13} placeholder={'Escribe el primer párrafo.\n\nSepara cada párrafo con una línea vacía.\n\nPuedes escribir hasta 30 párrafos.'} /></label><label>Imagen <small>Opcional · JPG, PNG o WebP de hasta 5 MB. Se subirá a cPanel al publicar.</small><input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setImageFile(event.target.files?.[0] || null)} /></label></section>
+        <section><h2>Contenido</h2><label>Texto del artículo<textarea name="content" required rows={13} placeholder={'Escribe el primer párrafo.\n\nSepara cada párrafo con una línea vacía.\n\nPuedes escribir hasta 30 párrafos.'} /></label><label>Imagen <small>Opcional · JPG, PNG o WebP de hasta 5 MB. Si no seleccionas una, se mantendrá la imagen predeterminada.</small><input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setImageFile(event.target.files?.[0] || null)} /></label></section>
         <button className="button-primary" disabled={sending} type="submit">{sending ? "Publicando..." : "Publicar artículo"} {!sending && <Send />}</button>
       </form>
     </>}

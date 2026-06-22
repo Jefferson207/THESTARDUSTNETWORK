@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowDown, ArrowRight, BookOpen, Compass, Eye, Heart, Orbit, Shield, Sparkles, Star, Users } from "lucide-react";
 import constellationsData from "@/data/constellations.json";
 import type { Constellation } from "@/lib/types";
@@ -7,8 +8,11 @@ import { Stars } from "@/components/Stars";
 import { MotionReveal } from "@/components/MotionReveal";
 import { ContactForm } from "@/components/ContactForm";
 import { getPosts } from "@/lib/posts";
+import { JsonLd } from "@/components/JsonLd";
+import { absoluteUrl, rssAlternates, siteConfig } from "@/lib/seo";
 
 const constellations = constellationsData as Constellation[];
+export const dynamic = "force-dynamic";
 const values = [
   { title: "Amor de decisión", icon: Heart, text: "Elegimos amar de forma consciente, madura y activa, incluso cuando requiere valentía." },
   { title: "Respeto", icon: Shield, text: "Escuchamos, aceptamos las diferencias y cuidamos la dignidad de cada persona." },
@@ -17,9 +21,40 @@ const values = [
   { title: "Libertad", icon: Compass, text: "Cultivamos autonomía, autenticidad y crecimiento interior sin imponer caminos." },
 ];
 
+export const metadata: Metadata = {
+  title: { absolute: siteConfig.title },
+  description: siteConfig.description,
+  alternates: { canonical: "/", types: rssAlternates },
+  openGraph: { url: "/", title: siteConfig.title, description: siteConfig.description, images: [{ url: siteConfig.socialImage, width: 1774, height: 887, alt: "The Stardust Network, una comunidad de crecimiento consciente" }] },
+  twitter: { card: "summary_large_image", title: siteConfig.title, description: siteConfig.description, images: [siteConfig.socialImage] },
+};
+
 export default async function Home() {
   const posts = await getPosts();
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteConfig.url}/#organization`,
+        name: siteConfig.name,
+        url: siteConfig.url,
+        logo: { "@type": "ImageObject", url: absoluteUrl("/icon.svg") },
+        description: siteConfig.description,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteConfig.url}/#website`,
+        url: siteConfig.url,
+        name: siteConfig.name,
+        description: siteConfig.description,
+        inLanguage: siteConfig.language,
+        publisher: { "@id": `${siteConfig.url}/#organization` },
+      },
+    ],
+  };
   return <main>
+    <JsonLd data={structuredData} />
     <section id="inicio" className="hero cosmic-hero">
       <Image src="/stardust-constellations.png" fill priority alt="Galaxia violeta atravesada por constelaciones luminosas" sizes="100vw" className="hero-bg" />
       <div className="hero-shade" /><Stars />
