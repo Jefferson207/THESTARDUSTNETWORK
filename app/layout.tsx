@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { HangingNazcaSpider } from "@/components/HangingNazcaSpider";
 import { rssAlternates, siteConfig } from "@/lib/seo";
 import "./globals.css";
 import "./comments.css";
@@ -47,4 +46,4 @@ export const metadata: Metadata = {
   },
   verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined,
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="es" className={`${manrope.variable} ${space.variable}`}><body><Navbar /><HangingNazcaSpider />{children}<Footer /></body></html>; }
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="es" className={`${manrope.variable} ${space.variable}`}><body><Navbar />{children}<Footer /></body></html>; }
