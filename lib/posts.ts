@@ -34,7 +34,11 @@ export async function getPosts(): Promise<Post[]> {
     const deletedPayload = await deletedResponse.json() as { result?: string[]; error?: string };
     if (deletedPayload.error) throw new Error(deletedPayload.error);
     const deletedSlugs = new Set(deletedPayload.result ?? []);
-    return [...storedPosts, ...seedPosts].filter(post => !deletedSlugs.has(post.slug));
+    const postsBySlug = new Map<string, Post>();
+    [...storedPosts, ...seedPosts].forEach(post => {
+      if (!postsBySlug.has(post.slug)) postsBySlug.set(post.slug, post);
+    });
+    return Array.from(postsBySlug.values()).filter(post => !deletedSlugs.has(post.slug));
   } catch (error) {
     console.error("Could not load stored posts", error);
     return seedPosts;

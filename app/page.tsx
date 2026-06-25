@@ -9,10 +9,15 @@ import { MotionReveal } from "@/components/MotionReveal";
 import { ContactForm } from "@/components/ContactForm";
 import { getPosts } from "@/lib/posts";
 import { JsonLd } from "@/components/JsonLd";
-import { absoluteUrl, rssAlternates, siteConfig } from "@/lib/seo";
+import { absoluteUrl, postPublishedDate, rssAlternates, siteConfig } from "@/lib/seo";
 
 const constellations = constellationsData as Constellation[];
 export const dynamic = "force-dynamic";
+const todayInPeru = () => {
+  const parts = new Intl.DateTimeFormat("en", { day: "2-digit", month: "2-digit", timeZone: "America/Lima", year: "numeric" }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+};
 const values = [
   { title: "Amor de decisión", icon: Heart, text: "Elegimos amar de forma consciente, madura y activa, incluso cuando requiere valentía." },
   { title: "Respeto", icon: Shield, text: "Escuchamos, aceptamos las diferencias y cuidamos la dignidad de cada persona." },
@@ -31,7 +36,12 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const posts = await getPosts();
-  const newArticlesCount = Math.min(posts.length, 3);
+  const articlesCount = posts.length;
+  const today = todayInPeru();
+  const todayArticlesCount = posts.filter(post => postPublishedDate(post) === today).length;
+  const articlesNotice = todayArticlesCount > 0
+    ? todayArticlesCount === 1 ? "Tiene 1 articulo nuevo hoy" : `Tiene ${todayArticlesCount} articulos nuevos hoy`
+    : articlesCount === 1 ? "Tiene 1 articulo publicado" : `Tiene ${articlesCount} articulos publicados`;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -56,10 +66,10 @@ export default async function Home() {
   };
   return <main>
     <JsonLd data={structuredData} />
-    {newArticlesCount > 0 && <Link className="new-articles-float" href="#constelaciones" aria-label={`Ver ${newArticlesCount} articulos recientes`}>
-      <span className="new-articles-badge">{newArticlesCount}</span>
+    {articlesCount > 0 && <Link className="new-articles-float" href="#constelaciones" aria-label={`Ver ${articlesCount} articulos publicados`}>
+      <span className="new-articles-badge">{articlesCount}</span>
       <Bell size={16} />
-      <span>{newArticlesCount === 1 ? "Hay 1 articulo nuevo" : `Hay ${newArticlesCount} articulos nuevos`}</span>
+      <span>{articlesNotice}</span>
     </Link>}
     <section id="inicio" className="hero cosmic-hero">
       <Image src="/stardust-constellations.png" fill priority alt="Galaxia violeta atravesada por constelaciones luminosas" sizes="100vw" className="hero-bg" />
