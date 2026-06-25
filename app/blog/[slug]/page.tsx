@@ -13,6 +13,19 @@ import { absoluteUrl, postPublishedDate, rssAlternates, siteConfig } from "@/lib
 
 const typedComments = comments as Comment[];
 export const dynamic = "force-dynamic";
+function stripHtml(value: string) {
+  return value.replace(/<[^>]*>/g, " ");
+}
+
+function hasHtml(value: string) {
+  return /<\/?[a-z][\s\S]*>/i.test(value);
+}
+
+function ArticleContentBlock({ block, index }: { block: string; index: number }) {
+  if (hasHtml(block)) return <div className="article-rich-block" dangerouslySetInnerHTML={{ __html: block }} />;
+  return <p key={index}>{block}</p>;
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const posts = await getPosts();
@@ -50,7 +63,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       dateModified: publishedDate,
       articleSection: post.category,
       inLanguage: siteConfig.language,
-      wordCount: post.content.join(" ").trim().split(/\s+/).length,
+      wordCount: stripHtml(post.content.join(" ")).trim().split(/\s+/).filter(Boolean).length,
       author: { "@type": "Organization", "@id": `${siteConfig.url}/#organization`, name: siteConfig.name },
       publisher: { "@type": "Organization", "@id": `${siteConfig.url}/#organization`, name: siteConfig.name, logo: { "@type": "ImageObject", url: absoluteUrl("/icon.svg") } },
     },
@@ -64,5 +77,5 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       ],
     },
   ];
-  return <main className="article-page"><JsonLd data={structuredData} /><div className="article-hero"><ArticleImage src={post.image} alt={`Imagen de ${post.title}`} priority className="article-bg" /><div className="article-overlay" /><Stars /><div className="article-heading"><Link href={`/constelaciones/${post.constellation}`}><ArrowLeft size={17} /> Volver a la constelación</Link><span className="kicker">{post.category}</span><h1>{post.title}</h1><p>{post.summary}</p><small>{post.date} · <Clock size={14} /> {post.readTime} de lectura</small></div></div><article className="article-content"><div className="article-icon"><Sparkles /></div>{post.content.map((paragraph, i) => <p key={i}>{paragraph}</p>)}</article><CommentSection postSlug={post.slug} initialComments={postComments} /></main>;
+  return <main className="article-page"><JsonLd data={structuredData} /><div className="article-hero"><ArticleImage src={post.image} alt={`Imagen de ${post.title}`} priority className="article-bg" /><div className="article-overlay" /><Stars /><div className="article-heading"><Link href={`/constelaciones/${post.constellation}`}><ArrowLeft size={17} /> Volver a la constelación</Link><span className="kicker">{post.category}</span><h1>{post.title}</h1><p>{post.summary}</p><small>{post.date} · <Clock size={14} /> {post.readTime} de lectura</small></div></div><article className="article-content"><div className="article-icon"><Sparkles /></div>{post.content.map((paragraph, i) => <ArticleContentBlock block={paragraph} index={i} key={i} />)}</article><CommentSection postSlug={post.slug} initialComments={postComments} /></main>;
 }

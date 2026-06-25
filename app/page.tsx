@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowDown, ArrowRight, BookOpen, Compass, Eye, Heart, Orbit, Shield, Sparkles, Star, Users } from "lucide-react";
+import { ArrowDown, ArrowRight, Bell, BookOpen, Compass, Eye, Heart, Orbit, Shield, Sparkles, Star, Users } from "lucide-react";
 import constellationsData from "@/data/constellations.json";
 import type { Constellation } from "@/lib/types";
 import { Stars } from "@/components/Stars";
@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const posts = await getPosts();
+  const newArticlesCount = Math.min(posts.length, 3);
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -55,6 +56,11 @@ export default async function Home() {
   };
   return <main>
     <JsonLd data={structuredData} />
+    {newArticlesCount > 0 && <Link className="new-articles-float" href="#constelaciones" aria-label={`Ver ${newArticlesCount} articulos recientes`}>
+      <span className="new-articles-badge">{newArticlesCount}</span>
+      <Bell size={16} />
+      <span>{newArticlesCount === 1 ? "Hay 1 articulo nuevo" : `Hay ${newArticlesCount} articulos nuevos`}</span>
+    </Link>}
     <section id="inicio" className="hero cosmic-hero">
       <Image src="/stardust-constellations.png" fill priority alt="Galaxia violeta atravesada por constelaciones luminosas" sizes="100vw" className="hero-bg" />
       <div className="hero-shade" /><Stars />

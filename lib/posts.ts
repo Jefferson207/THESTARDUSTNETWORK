@@ -24,7 +24,17 @@ export async function getPosts(): Promise<Post[]> {
     const storedPosts = (payload.result ?? []).flatMap(value => {
       try { return [JSON.parse(value) as Post]; } catch { return []; }
     });
-    return [...storedPosts, ...seedPosts];
+    const deletedResponse = await fetch(redisUrl, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${redisToken}`, "Content-Type": "application/json" },
+      body: JSON.stringify(["SMEMBERS", "stardust:deleted-posts"]),
+      cache: "no-store",
+    });
+    if (!deletedResponse.ok) throw new Error(`POST_STORAGE_${deletedResponse.status}`);
+    const deletedPayload = await deletedResponse.json() as { result?: string[]; error?: string };
+    if (deletedPayload.error) throw new Error(deletedPayload.error);
+    const deletedSlugs = new Set(deletedPayload.result ?? []);
+    return [...storedPosts, ...seedPosts].filter(post => !deletedSlugs.has(post.slug));
   } catch (error) {
     console.error("Could not load stored posts", error);
     return seedPosts;
