@@ -67,7 +67,6 @@ export default async function Home() {
   return <main>
     <JsonLd data={structuredData} />
     {articlesCount > 0 && <Link className="new-articles-float" href="#constelaciones" aria-label={`Ver ${articlesCount} articulos publicados`}>
-      <span className="new-articles-badge">{articlesCount}</span>
       <Bell size={16} />
       <span>{articlesNotice}</span>
     </Link>}
@@ -95,10 +94,14 @@ export default async function Home() {
 
     <section id="constelaciones" className="section constellation-section"><Stars /><div className="section-inner constellation-content">
       <MotionReveal className="section-heading"><div><span className="kicker">NUESTRO UNIVERSO COMPARTIDO</span><h2>Explora las <em>constelaciones</em></h2></div><p>Cada constelación es un espacio vivo para aprender, compartir y transformar intención en comunidad.</p></MotionReveal>
-      <div className="constellations-grid">{constellations.map((item, index) => <MotionReveal className={`constellation-card ${index === 0 ? "featured-constellation" : ""}`} delay={(index % 4) * .06} key={item.slug}>
+      <div className="constellations-grid">{constellations.map((item, index) => {
+        const constellationPosts = posts.filter(post => post.constellation === item.slug);
+        const constellationTodayCount = constellationPosts.filter(post => postPublishedDate(post) === today).length;
+        return <MotionReveal className={`constellation-card ${index === 0 ? "featured-constellation" : ""}`} delay={(index % 4) * .06} key={item.slug}>
         <div className="constellation-image"><Image src={item.image} fill sizes="(max-width: 800px) 100vw, 50vw" alt={`Imagen cósmica de ${item.title}`} /><div className="constellation-overlay" /></div>
-        <div className="constellation-body"><div className="constellation-meta"><span className="constellation-index">CONSTELACIÓN</span><span><BookOpen /> {posts.filter(post => post.constellation === item.slug).length} {posts.filter(post => post.constellation === item.slug).length === 1 ? "ARTÍCULO" : "ARTÍCULOS"}</span></div><h3 id={item.slug}>{item.title}</h3><h4>{item.subtitle}</h4>{item.quote && <blockquote>“{item.quote}”</blockquote>}<p>{item.description}</p><Link href={`/constelaciones/${item.slug}`}>Entrar en esta constelación <ArrowRight size={15} /></Link></div>
-      </MotionReveal>)}</div>
+        <div className="constellation-body"><div className="constellation-meta"><span className="constellation-index">CONSTELACIÓN</span><span className="constellation-article-count"><BookOpen /> {constellationPosts.length} {constellationPosts.length === 1 ? "ARTÍCULO" : "ARTÍCULOS"}</span>{constellationTodayCount > 0 && <span className="constellation-today-badge"><Bell size={10} /> {constellationTodayCount === 1 ? "NUEVO HOY" : `${constellationTodayCount} NUEVOS HOY`}</span>}</div><h3 id={item.slug}>{item.title}</h3><h4>{item.subtitle}</h4>{item.quote && <blockquote>“{item.quote}”</blockquote>}<p>{item.description}</p><Link href={`/constelaciones/${item.slug}`}>Entrar en esta constelación <ArrowRight size={15} /></Link></div>
+      </MotionReveal>;
+      })}</div>
     </div></section>
 
     <section id="unirme" className="section contact"><Stars /><div className="section-inner contact-grid"><MotionReveal><span className="kicker">TU LUZ TAMBIÉN CUENTA</span><h2>Levantemos la mirada.<br /><em>Caminemos juntos.</em></h2><p>Este refugio se construye con personas reales dispuestas a escuchar, crecer y poner sus valores en acción.</p><div className="contact-points"><span><Sparkles /> Ocho espacios para encontrar tu lugar</span><span><Users /> Una comunidad humana y sin juicios</span><span><Heart /> Acciones nacidas del amor consciente</span></div></MotionReveal><MotionReveal><ContactForm /></MotionReveal></div></section>

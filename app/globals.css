@@ -68,3 +68,4 @@ html{scrollbar-color:#5f4b9b #050817;scrollbar-width:thin}
 .avatars i,.hero-proof small,.core,.mini-stats span,.value-card>span,.contact-form label,.contact-form>small,.article-heading small,.comment small,.footer-bottom{font-size:11px}
 .visit-counter b{font-size:15px}
 @media(max-width:620px){.hero-copy p{font-size:13px}}
+.constellation-meta{flex-wrap:wrap;row-gap:8px}.constellation-article-count,.constellation-today-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-space);font-size:10px;letter-spacing:.12em}.constellation-article-count{color:#8f83bd}.constellation-today-badge{padding:5px 8px;border:1px solid rgba(233,201,123,.35);border-radius:99px;background:rgba(233,201,123,.1);color:#f7efd0}.constellation-today-badge svg{color:var(--gold)}
