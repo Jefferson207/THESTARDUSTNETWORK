@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from "node:fs/promises";
 import { getPosts, postsPath } from "@/lib/posts";
 import type { Post } from "@/lib/types";
-import constellations from "@/data/constellations.json";
+import { getConstellations } from "@/lib/constellations";
 import { adminAuthConfigured, validAdminCredentials } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
@@ -185,6 +185,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const title = text(body.title, 140);
     const constellationSlug = text(body.constellation, 100);
+    const constellations = await getConstellations();
     const selected = constellations.find(item => item.slug === constellationSlug);
     const summary = text(body.summary, 300);
     const date = text(body.date, 40);
@@ -234,6 +235,7 @@ export async function PUT(request: NextRequest) {
     const slug = text(body.slug, 100);
     const title = text(body.title, 140);
     const constellationSlug = text(body.constellation, 100);
+    const constellations = await getConstellations();
     const selected = constellations.find(item => item.slug === constellationSlug);
     const summary = text(body.summary, 300);
     const date = text(body.date, 40);

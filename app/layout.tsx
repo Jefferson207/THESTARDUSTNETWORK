@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope, Space_Grotesk } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { getConstellations } from "@/lib/constellations";
 import { rssAlternates, siteConfig } from "@/lib/seo";
 import "./globals.css";
 import "./comments.css";
@@ -9,6 +10,7 @@ import "./stars-motion.css";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
+export const dynamic = "force-dynamic";
 export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#050817", colorScheme: "dark" };
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -46,4 +48,7 @@ export const metadata: Metadata = {
   },
   verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined,
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="es" className={`${manrope.variable} ${space.variable}`}><body><Navbar />{children}<Footer /></body></html>; }
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const constellations = await getConstellations();
+  return <html lang="es" className={`${manrope.variable} ${space.variable}`}><body><Navbar constellations={constellations} />{children}<Footer constellations={constellations} /></body></html>;
+}

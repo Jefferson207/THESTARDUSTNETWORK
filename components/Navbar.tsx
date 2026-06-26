@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { ChevronDown, Menu, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import constellations from "@/data/constellations.json";
+import type { Constellation } from "@/lib/types";
 
-export function Navbar() {
+export function Navbar({ constellations }: { constellations: Constellation[] }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => { const run = () => setScrolled(scrollY > 20); run(); addEventListener("scroll", run); return () => removeEventListener("scroll", run); }, []);

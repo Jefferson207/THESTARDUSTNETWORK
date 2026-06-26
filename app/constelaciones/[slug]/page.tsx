@@ -3,20 +3,22 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, MessageCircle, Sparkles } from "lucide-react";
-import constellationsData from "@/data/constellations.json";
-import type { Constellation } from "@/lib/types";
 import { getPosts } from "@/lib/posts";
+import { getConstellations } from "@/lib/constellations";
 import { getComments } from "@/lib/comments";
 import { Stars } from "@/components/Stars";
 import { ArticleImage } from "@/components/ArticleImage";
 import { JsonLd } from "@/components/JsonLd";
 import { absoluteUrl, rssAlternates, siteConfig } from "@/lib/seo";
 
-const constellations = constellationsData as Constellation[];
 export const dynamic = "force-dynamic";
-export function generateStaticParams() { return constellations.map(({ slug }) => ({ slug })); }
+export async function generateStaticParams() {
+  const constellations = await getConstellations();
+  return constellations.map(({ slug }) => ({ slug }));
+}
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  const constellations = await getConstellations();
   const item = constellations.find(c => c.slug === slug);
   if (!item) return { title: "Constelación no encontrada", robots: { index: false, follow: false } };
   const path = `/constelaciones/${item.slug}`;
@@ -31,6 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ConstellationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const constellations = await getConstellations();
   const item = constellations.find(c => c.slug === slug);
   if (!item) notFound();
   const [allPosts, comments] = await Promise.all([getPosts(), getComments()]);

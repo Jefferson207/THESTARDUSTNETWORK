@@ -3,3 +3,4 @@ export type Event = { day: string; month: string; title: string; type: string; t
 export type CommunityValue = { name: string; description: string };
 export type Comment = { postSlug: string; name: string; date: string; message: string };
 export type Constellation = { slug: string; title: string; subtitle: string; quote: string; description: string; image: string; relatedPosts: string[] };
+export type Signal = { id: string; name: string; email: string; interest: string; message: string; createdAt: string; date: string };

@@ -2,16 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowDown, ArrowRight, Bell, BookOpen, Compass, Eye, Heart, Orbit, Shield, Sparkles, Star, Users } from "lucide-react";
-import constellationsData from "@/data/constellations.json";
-import type { Constellation } from "@/lib/types";
 import { Stars } from "@/components/Stars";
 import { MotionReveal } from "@/components/MotionReveal";
 import { ContactForm } from "@/components/ContactForm";
 import { getPosts } from "@/lib/posts";
+import { getConstellations } from "@/lib/constellations";
 import { JsonLd } from "@/components/JsonLd";
 import { absoluteUrl, postPublishedDate, rssAlternates, siteConfig } from "@/lib/seo";
 
-const constellations = constellationsData as Constellation[];
 export const dynamic = "force-dynamic";
 const todayInPeru = () => {
   const parts = new Intl.DateTimeFormat("en", { day: "2-digit", month: "2-digit", timeZone: "America/Lima", year: "numeric" }).formatToParts(new Date());
@@ -35,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const posts = await getPosts();
+  const [posts, constellations] = await Promise.all([getPosts(), getConstellations()]);
   const articlesCount = posts.length;
   const today = todayInPeru();
   const todayArticlesCount = posts.filter(post => postPublishedDate(post) === today).length;
@@ -104,6 +102,6 @@ export default async function Home() {
       })}</div>
     </div></section>
 
-    <section id="unirme" className="section contact"><Stars /><div className="section-inner contact-grid"><MotionReveal><span className="kicker">TU LUZ TAMBIÉN CUENTA</span><h2>Levantemos la mirada.<br /><em>Caminemos juntos.</em></h2><p>Este refugio se construye con personas reales dispuestas a escuchar, crecer y poner sus valores en acción.</p><div className="contact-points"><span><Sparkles /> Ocho espacios para encontrar tu lugar</span><span><Users /> Una comunidad humana y sin juicios</span><span><Heart /> Acciones nacidas del amor consciente</span></div></MotionReveal><MotionReveal><ContactForm /></MotionReveal></div></section>
+    <section id="unirme" className="section contact"><Stars /><div className="section-inner contact-grid"><MotionReveal><span className="kicker">TU LUZ TAMBIÉN CUENTA</span><h2>Levantemos la mirada.<br /><em>Caminemos juntos.</em></h2><p>Este refugio se construye con personas reales dispuestas a escuchar, crecer y poner sus valores en acción.</p><div className="contact-points"><span><Sparkles /> Ocho espacios para encontrar tu lugar</span><span><Users /> Una comunidad humana y sin juicios</span><span><Heart /> Acciones nacidas del amor consciente</span></div></MotionReveal><MotionReveal><ContactForm constellations={constellations} /></MotionReveal></div></section>
   </main>;
 }
