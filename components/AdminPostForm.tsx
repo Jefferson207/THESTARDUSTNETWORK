@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Check, Download, Edit3, Eye, FilePlus2, FileSpreadsheet, Layers3, List, LockKeyhole, LogIn, LogOut, Plus, RefreshCw, Search, Send, Trash2, UsersRound, X } from "lucide-react";
 import Link from "next/link";
 import type { Constellation, Post, Signal } from "@/lib/types";
@@ -93,13 +93,9 @@ export function AdminPostForm() {
     if (nextView === "constellations") resetArticleForm();
   }
 
-  function startEdit(post: Post) {
+  function populateArticleForm(post: Post) {
     const form = formRef.current;
     if (!form) return;
-    setView("create");
-    setEditingPost(post);
-    clearMessages();
-    setImageFile(null);
     (form.elements.namedItem("constellation") as HTMLSelectElement).value = post.constellation;
     (form.elements.namedItem("title") as HTMLInputElement).value = post.title;
     (form.elements.namedItem("date") as HTMLInputElement).value = inputDate(post);
@@ -109,6 +105,17 @@ export function AdminPostForm() {
     if (imageInput) imageInput.value = "";
     if (editorRef.current) editorRef.current.innerHTML = post.content.join("");
     setTimeout(() => form.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  }
+
+  useEffect(() => {
+    if (view === "create" && editingPost) populateArticleForm(editingPost);
+  }, [view, editingPost]);
+
+  function startEdit(post: Post) {
+    setView("create");
+    setEditingPost(post);
+    clearMessages();
+    setImageFile(null);
   }
 
   function startEditConstellation(constellation: Constellation) {
